@@ -49,8 +49,12 @@ RUN yarn install --frozen-lockfile --production
 # Copy application code
 COPY . .
 
-# Precompile assets
-RUN SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
+# Precompile assets (with dummy database URL to prevent connection attempts)
+RUN SECRET_KEY_BASE=dummy \
+    RAILS_ENV=production \
+    NODE_ENV=production \
+    DATABASE_URL=postgresql://localhost/dummy \
+    bundle exec rails assets:precompile
 
 # Create non-root user
 RUN useradd -m -u 1000 rails && \
