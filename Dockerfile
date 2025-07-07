@@ -10,18 +10,20 @@ RUN apt-get update -qq && \
         libpq-dev \
         libxml2-dev \
         libxslt-dev \
-        nodejs \
         postgresql-client \
         imagemagick \
         libvips \
         tzdata \
         ca-certificates \
         gnupg \
-        lsb-release && \
-    # Install Node.js 20.x
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+        lsb-release \
+        && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20.x and Yarn
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get update -qq && \
     apt-get install -y nodejs && \
-    # Clean up
+    npm install -g yarn && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
