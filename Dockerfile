@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ruby:2.7.8-slim as base
+FROM ruby:2.7.8-slim AS base
 
 # Install base packages
 RUN apt-get update -qq && \
@@ -37,9 +37,9 @@ RUN bundle config set --local deployment 'true' && \
     bundle config set --local without 'development test' && \
     bundle install --jobs 4 --retry 3
 
-# Copy package.json and install Node dependencies
-COPY package.json package-lock.json ./
-RUN npm ci --production
+# Copy package.json and yarn.lock and install Node dependencies
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production
 
 # Copy application code
 COPY . .
