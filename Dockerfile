@@ -19,10 +19,13 @@ RUN apt-get update -qq && \
         lsb-release \
         && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js 20.x and Yarn
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get update -qq && \
-    apt-get install -y nodejs && \
+# Install Node.js and n (node version manager)
+RUN apt-get update -qq && \
+    apt-get install -y wget && \
+    # Install n
+    curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n && \
+    bash n 20.17.0 && \
+    # Install yarn
     npm install -g yarn && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
