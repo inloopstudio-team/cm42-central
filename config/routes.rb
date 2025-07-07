@@ -122,4 +122,7 @@ Rails.application.routes.draw do
       resources :events, only: :create
     end
   end
+
+  # Health check endpoint
+  get '/health', to: 'health#show'
 end

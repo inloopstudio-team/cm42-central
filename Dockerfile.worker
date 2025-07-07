@@ -1,0 +1,14 @@
+# syntax=docker/dockerfile:1
+# Build from base Dockerfile
+ARG BASE_IMAGE=cm42-central:base
+FROM ${BASE_IMAGE} AS worker
+
+# Default Sidekiq concurrency
+ENV SIDEKIQ_CONCURRENCY=100
+
+# Health check for Sidekiq (checks if process is running)
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+  CMD ps aux | grep '[s]idekiq' || exit 1
+
+# Command from Procfile with dynamic concurrency
+CMD ["sh", "-c", "bundle exec sidekiq -C config/sidekiq.yml -c ${SIDEKIQ_CONCURRENCY} -e production"]
